@@ -21,13 +21,11 @@ function retrieveGroupMembers(initialValue) {
         const assignedToDropdown = document.createElement("select");
         assignedToDropdown.id = "assignedToDropdown";
 
-        // Add Unassigned option if userId is null or undefined
-        if (initialValue === null || initialValue === undefined) {
-            const unassignedOption = document.createElement("option");
-            unassignedOption.value = "";
-            unassignedOption.text = "Unassigned";
-            assignedToDropdown.appendChild(unassignedOption);
-        }
+        // Add Unassigned option first
+        const unassignedOption = document.createElement("option");
+        unassignedOption.value = "";
+        unassignedOption.text = "Unassigned";
+        assignedToDropdown.appendChild(unassignedOption);
 
         members.forEach(member => {
             const option = document.createElement("option");
