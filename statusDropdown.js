@@ -1,8 +1,8 @@
 function retrieveStatusOptions() {
     const siteUrl = "https://sp.bbh.com/sites/ESPurchasing";
-    const listTitle = "PurchaseRequests";
+    const listTitle = "YourListTitle";
     const fieldName = "Status";
-    const endpointUrl = `${siteUrl}/_api/web/lists/getbytitle('${listTitle}')/items?$select=${fieldName}`;
+    const endpointUrl = `${siteUrl}/_api/web/lists/getbytitle('${listTitle}')/fields/getbytitle('${fieldName}')`;
   
     fetch(endpointUrl, {
       headers: {
@@ -11,7 +11,9 @@ function retrieveStatusOptions() {
     })
       .then((response) => response.json())
       .then((data) => {
-        const fieldValue = data.d.results[0][fieldName];
+        // Get the current status value from the field
+        const fieldValueElement = document.querySelector("span.dataQuickLocate[data-internalName='Status'] input");
+        const fieldValue = fieldValueElement ? fieldValueElement.value : "";
   
         // Define the preset choices
         const choices = ["Not-Started", "In-Progress", "In-Approval", "Ordered", "Completed"];
@@ -38,8 +40,7 @@ function retrieveStatusOptions() {
         // Set event listener for the dropdown change
         statusDropdown.addEventListener("change", () => {
           const selectedOption = statusDropdown.options[statusDropdown.selectedIndex];
-          const inputElement = document.querySelector("span.dataQuickLocate[data-internalName='Status'] input");
-          inputElement.value = selectedOption.value;
+          fieldValueElement.value = selectedOption.value;
         });
   
         // Append the dropdown to a container element with its own ID
@@ -59,4 +60,4 @@ function retrieveStatusOptions() {
   }
   
   // Call the function to retrieve status options and initialize the dropdown
-  retrieveStatusOptions();
+  retrieveStatusOptions();  
