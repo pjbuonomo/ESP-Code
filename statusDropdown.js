@@ -1,44 +1,62 @@
-function createStatusDropdown(initialValue) {
-    // Define the preset choices
-    const choices = ["Not-Started", "In-Progress", "In-Approval", "Ordered", "Completed"];
+function retrieveStatusOptions(initialValue) {
+    const siteUrl = "https://sp.bbh.com/sites/ESPurchasing";
+    const listTitle = "YourListTitle";
+    const fieldName = "Status";
+    const endpointUrl = `${siteUrl}/_api/web/lists/getbytitle('${listTitle}')/items?$select=${fieldName}`;
   
-    // Create the dropdown and assign options
-    const statusDropdown = document.createElement("select");
-    statusDropdown.id = "statusDropdown";
+    fetch(endpointUrl, {
+      headers: {
+        Accept: "application/json;odata=verbose",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const fieldValue = data.d.results[0][fieldName];
   
-    choices.forEach((choice) => {
-      const option = document.createElement("option");
-      option.value = choice;
-      option.text = choice;
-      statusDropdown.appendChild(option);
-    });
+        // Define the preset choices
+        const choices = ["Not-Started", "In-Progress", "In-Approval", "Ordered", "Completed"];
   
-    // Set default value of dropdown based on initial input value
-    const initialOption = Array.from(statusDropdown.options).find(
-      (option) => option.value === initialValue
-    );
-    if (initialOption) {
-      initialOption.selected = true;
-    }
+        // Create the dropdown and assign options
+        const statusDropdown = document.createElement("select");
+        statusDropdown.id = "statusDropdown";
   
-    // Set event listener for the dropdown change
-    statusDropdown.addEventListener("change", () => {
-      const selectedOption = statusDropdown.options[statusDropdown.selectedIndex];
-      // Perform any desired actions with the selected option
-      console.log("Selected status:", selectedOption.value);
-    });
+        choices.forEach((choice) => {
+          const option = document.createElement("option");
+          option.value = choice;
+          option.text = choice;
+          statusDropdown.appendChild(option);
+        });
   
-    // Append the dropdown to a container element with its own ID
-    const dropdownContainer = document.getElementById("statusDropdownContainer");
+        // Set default value of dropdown based on current field value
+        const initialOption = Array.from(statusDropdown.options).find(
+          (option) => option.value === fieldValue
+        );
+        if (initialOption) {
+          initialOption.selected = true;
+        }
   
-    // Clear previous dropdown if it exists
-    const previousDropdown = document.getElementById("statusDropdown");
-    if (previousDropdown) {
-      dropdownContainer.removeChild(previousDropdown);
-    }
+        // Set event listener for the dropdown change
+        statusDropdown.addEventListener("change", () => {
+          const selectedOption = statusDropdown.options[statusDropdown.selectedIndex];
+          // Perform any desired actions with the selected option
+          console.log("Selected status:", selectedOption.value);
+        });
   
-    dropdownContainer.appendChild(statusDropdown);
+        // Append the dropdown to a container element with its own ID
+        const dropdownContainer = document.getElementById("statusDropdownContainer");
+  
+        // Clear previous dropdown if it exists
+        const previousDropdown = document.getElementById("statusDropdown");
+        if (previousDropdown) {
+          dropdownContainer.removeChild(previousDropdown);
+        }
+  
+        dropdownContainer.appendChild(statusDropdown);
+      })
+      .catch((error) => {
+        console.log("Error retrieving status options:", error);
+      });
   }
   
   // Call the function with the initial value
-  createStatusDropdown(initialValue);  
+  retrieveStatusOptions(initialValue);  
