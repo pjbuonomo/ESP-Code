@@ -3,7 +3,7 @@ const fieldName = "Status";
 
 function retrieveStatusOptions(initialValue) {
   const siteUrl = "https://sp.bbh.com/sites/ESPurchasing";
-  const endpointUrl = `${siteUrl}/_api/web/lists/getbytitle('${listTitle}')/fields?$filter=InternalName eq '${fieldName}'&$select=Choices`;
+  const endpointUrl = `${siteUrl}/_api/web/lists/getbytitle('${listTitle}')/fields/getbyinternalnameortitle('${fieldName}')`;
 
   fetch(endpointUrl, {
     headers: {
@@ -12,17 +12,7 @@ function retrieveStatusOptions(initialValue) {
   })
     .then((response) => response.json())
     .then((data) => {
-      const fieldChoicesXml = data.d.results[0].Choices;
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(fieldChoicesXml, "text/xml");
-      const choiceNodes = xmlDoc.getElementsByTagName("CHOICE");
-
-      // Extract the choices from XML
-      const fieldChoices = [];
-      for (let i = 0; i < choiceNodes.length; i++) {
-        const choice = choiceNodes[i].textContent;
-        fieldChoices.push(choice);
-      }
+      const fieldChoices = data.d.Choices;
 
       // Create the dropdown and assign options
       const statusDropdown = document.createElement("select");
