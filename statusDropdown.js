@@ -1,6 +1,6 @@
-function retrieveStatusOptions(initialValue) {
+function retrieveStatusOptions() {
     const siteUrl = "https://sp.bbh.com/sites/ESPurchasing";
-    const listTitle = "YourListTitle";
+    const listTitle = "PurchaseRequests";
     const fieldName = "Status";
     const endpointUrl = `${siteUrl}/_api/web/lists/getbytitle('${listTitle}')/items?$select=${fieldName}`;
   
@@ -38,8 +38,8 @@ function retrieveStatusOptions(initialValue) {
         // Set event listener for the dropdown change
         statusDropdown.addEventListener("change", () => {
           const selectedOption = statusDropdown.options[statusDropdown.selectedIndex];
-          // Perform any desired actions with the selected option
-          console.log("Selected status:", selectedOption.value);
+          const inputElement = document.querySelector("span.dataQuickLocate[data-internalName='Status'] input");
+          inputElement.value = selectedOption.value;
         });
   
         // Append the dropdown to a container element with its own ID
@@ -58,5 +58,5 @@ function retrieveStatusOptions(initialValue) {
       });
   }
   
-  // Call the function with the initial value
-  retrieveStatusOptions(initialValue);  
+  // Call the function to retrieve status options and initialize the dropdown
+  retrieveStatusOptions();
