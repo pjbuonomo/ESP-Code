@@ -7,7 +7,7 @@ $(document).ready(function() {
   function retrieveItemData() {
     var itemId = 1; // Set the desired itemId
     $.ajax({
-      url: "https://sp.bbh.com/sites/ESPurchasing/_api/web/lists/getbytitle('DiningServicesSite')/items(" + itemId + ")",
+      url: "https://sp.bbh.com/sites/BBHDiningServices/_api/web/lists/getbytitle('DiningServicesSite')/items(" + itemId + ")",
       method: "GET",
       headers: {
         "Accept": "application/json; odata=verbose"
@@ -33,7 +33,7 @@ $(document).ready(function() {
   
       $(this).empty().append(spanElement, inputElement);
     });
-    
+  
     // Hide the cancel and save buttons initially
     $('#cancelButton').hide();
     $('#saveButton').hide();
@@ -67,17 +67,20 @@ $(document).ready(function() {
   }
   
   // Button click event handler to toggle edit mode
-  $('#editButton').on('click', function () {
+  $('#editButton').on('click', function (event) {
+    event.preventDefault();
     toggleEditMode();
   });
   
   // Button click event handler to cancel changes
-  $('#cancelButton').on('click', function () {
+  $('#cancelButton').on('click', function (event) {
+    event.preventDefault();
     toggleEditMode();
   });
   
   // Button click event handler to save changes
-  $('#saveButton').on('click', function () {
+  $('#saveButton').on('click', function (event) {
+    event.preventDefault();
     var itemData = collectItemData();
     var itemId = 1; // Set the desired itemId
     updateListItem(itemId, itemData);
@@ -124,4 +127,3 @@ $(document).ready(function() {
       }
     });
   }
-  
