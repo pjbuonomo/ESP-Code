@@ -75,7 +75,7 @@ $(document).ready(function() {
       toggleEditMode();
       button.text('Edit');
       var itemData = collectItemData();
-      updateListItem(itemId, itemData);
+      updateListItem(1, itemData); // Replace 1 with the appropriate itemId
     }
   });
   
@@ -95,7 +95,7 @@ $(document).ready(function() {
   // Function to update the list item
   function updateListItem(itemId, itemData) {
     var listName = "DiningServicesSite";
-    var url = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('" + listName + "')/items(1)";
+    var url = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('" + listName + "')/items(" + itemId + ")";
   
     $.ajax({
       url: url,
