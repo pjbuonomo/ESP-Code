@@ -38,6 +38,7 @@ function initializeFields(itemData) {
       }
     
       $(this).empty().append(element);
+      element.hide(); // Hide the input or textarea field by default
     });
     
     // Hide the cancel and save buttons initially
@@ -207,6 +208,5 @@ function initializeFields(itemData) {
 
 
   
-
 
   
