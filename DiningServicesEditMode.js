@@ -111,10 +111,7 @@ $(document).ready(function() {
   // Function to update the list item
   function updateListItem(itemId, itemData) {
     var listName = "DiningServicesSite";
-    var itemTypeName = $('span[data-internalName]').attr('internalField'); // Get the desired item type name from the 'internalField' attribute
     var url = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('" + listName + "')/items(" + itemId + ")";
-  
-    itemData.__metadata = { 'type': 'SP.Data.' + itemTypeName + 'ListItem' };
   
     $.ajax({
       url: url,
@@ -134,8 +131,9 @@ $(document).ready(function() {
         alert('Your changes have been saved!');
       },
       error: function (data) {
-        alert("Error updating item: " + JSON.stringify(data));
-        console.log("Error updating item: " + JSON.stringify(data));
+        alert("Error updating item: " + data);
+        console.log("Error updating item: " + data);
       }
     });
-  }  
+  }
+  
