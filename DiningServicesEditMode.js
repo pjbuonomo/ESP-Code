@@ -1,29 +1,30 @@
 $(document).ready(function() {
-    // Call the function to populate the fields when the page is ready
-    populateFields();
+    // Retrieve itemData from SharePoint and initialize fields
+    retrieveItemData();
   });
   
-  // Function to populate the fields
-  function populateFields() {
-    $('span[data-internalName]').each(function () {
-      var internalName = $(this).data('internalname');
-      var fieldContent = itemData[internalName];
-      var element = null;
-  
-      if (internalName === "Item_x0020_Details" || internalName === "Comment") {
-        element = $('<textarea class="form-control offcanvas-field"></textarea>');
-        element.val(fieldContent);
-      } else {
-        element = $('<input type="text" class="form-control offcanvas-field">');
-        element.val(fieldContent);
+  // Function to retrieve itemData from SharePoint
+  function retrieveItemData() {
+    var itemId = 1; // Set the desired itemId
+    $.ajax({
+      url: "https://sp.bbh.com/sites/ESPurchasing/_api/web/lists/getbytitle('DiningServicesSite')/items(" + itemId + ")",
+      method: "GET",
+      headers: {
+        "Accept": "application/json; odata=verbose"
+      },
+      success: function(data) {
+        var itemData = data.d;
+        console.log(itemData);
+        initializeFields(itemData);
+      },
+      error: function(data) {
+        console.log("Error: " + data);
       }
-  
-      element.attr('data-internalName', internalName);
-      $(this).empty().append(element);
     });
   }
-// Function to initialize the fields
-function initializeFields() {
+  
+  // Function to initialize and populate the fields
+  function initializeFields(itemData) {
     $('span[data-internalName]').each(function () {
       var internalName = $(this).data('internalname');
       var fieldContent = itemData[internalName];
