@@ -42,29 +42,33 @@ function initializeFields(itemData) {
     $('#saveButton').hide();
   }
   
-  // Function to toggle between input/textarea and span tags
-  function toggleEditMode() {
+// Function to toggle between input/textarea and span tags
+function toggleEditMode() {
     var editButton = $('#editButton');
     var cancelButton = $('#cancelButton');
     var saveButton = $('#saveButton');
-    var spanElements = $('span[data-internalName]');
-    var inputElements = $('input[data-internalName]');
-    var textareaElements = $('textarea[data-internalName]');
     
     editButton.toggle();
     cancelButton.toggle();
     saveButton.toggle();
     
-    if (inputElements.is(':visible') || textareaElements.is(':visible')) {
-      spanElements.show();
-      inputElements.hide();
-      textareaElements.hide();
-    } else {
-      spanElements.hide();
-      inputElements.show();
-      textareaElements.show();
-    }
+    $('span[data-internalName]').each(function () {
+      var inputElement = $(this).find('input');
+      var textareaElement = $(this).find('textarea');
+      var spanElement = $(this).find('.inner-span');
+      
+      if (inputElement.is(':visible') || textareaElement.is(':visible')) {
+        spanElement.show();
+        inputElement.hide();
+        textareaElement.hide();
+      } else {
+        spanElement.hide();
+        inputElement.show();
+        textareaElement.show();
+      }
+    });
   }
+  
   
   
   // Button click event handler to toggle edit mode
@@ -200,10 +204,6 @@ function initializeFields(itemData) {
 
 
   
-
-
-
-
 
 
 
