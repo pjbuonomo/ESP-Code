@@ -28,63 +28,67 @@ $(document).ready(function() {
     $('span[data-internalName]').each(function () {
       var internalName = $(this).data('internalname');
       var fieldContent = itemData[internalName];
-      var element = null;
+      var spanElement = $('<span></span>').text(fieldContent).attr('data-internalName', internalName);
+      var inputElement = $('<input type="text" class="form-control offcanvas-field">').val(fieldContent).attr('data-internalName', internalName);
   
-      if (internalName === "Item_x0020_Details" || internalName === "Comment") {
-        element = $('<textarea class="form-control offcanvas-field"></textarea>');
-        element.val(fieldContent);
-      } else {
-        element = $('<input type="text" class="form-control offcanvas-field">');
-        element.val(fieldContent);
-      }
-  
-      element.attr('data-internalName', internalName);
-      $(this).empty().append(element);
+      $(this).empty().append(spanElement, inputElement);
     });
+    
+    // Hide the cancel and save buttons initially
+    $('#cancelButton').hide();
+    $('#saveButton').hide();
   }
   
   // Function to toggle between input and span tags
   function toggleEditMode() {
-    $('span[data-internalName]').each(function () {
-      var internalName = $(this).data('internalname');
-      var fieldContent = $(this).find('input, textarea').val();
-      var element = null;
+    var editButton = $('#editButton');
+    var cancelButton = $('#cancelButton');
+    var saveButton = $('#saveButton');
   
-      if (internalName === "Item_x0020_Details" || internalName === "Comment") {
-        element = $('<span></span>');
-        element.text(fieldContent);
+    editButton.toggle();
+    cancelButton.toggle();
+    saveButton.toggle();
+  
+    $('span[data-internalName]').each(function() {
+      var inputElement = $(this).find('input');
+      var spanElement = $(this).find('span');
+  
+      if (inputElement.is(':visible')) {
+        // Restore the original value from the span element
+        inputElement.val(spanElement.text());
       } else {
-        element = $('<span></span>');
-        element.text(fieldContent);
+        // Set the value of the input element from the span element
+        inputElement.val(spanElement.text());
       }
   
-      element.attr('data-internalName', internalName);
-      $(this).empty().append(element);
+      inputElement.toggle();
+      spanElement.toggle();
     });
   }
   
   // Button click event handler to toggle edit mode
-  $('#EditModeToggle').on('click', function () {
-    var button = $(this);
-    var buttonText = button.text();
+  $('#editButton').on('click', function () {
+    toggleEditMode();
+  });
   
-    if (buttonText === 'Edit') {
-      initializeFields();
-      button.text('Save');
-    } else if (buttonText === 'Save') {
-      toggleEditMode();
-      button.text('Edit');
-      var itemData = collectItemData();
-      updateListItem(1, itemData); // Replace 1 with the appropriate itemId
-    }
+  // Button click event handler to cancel changes
+  $('#cancelButton').on('click', function () {
+    toggleEditMode();
+  });
+  
+  // Button click event handler to save changes
+  $('#saveButton').on('click', function () {
+    var itemData = collectItemData();
+    var itemId = 1; // Set the desired itemId
+    updateListItem(itemId, itemData);
   });
   
   // Function to collect item data from the fields
   function collectItemData() {
     var itemData = {};
   
-    $('span[data-internalName] input, span[data-internalName] textarea').each(function () {
-      var internalName = $(this).parent().data('internalname');
+    $('span[data-internalName] input').each(function () {
+      var internalName = $(this).attr('data-internalName');
       var value = $(this).val();
       itemData[internalName] = value;
     });
@@ -111,6 +115,7 @@ $(document).ready(function() {
       success: function (data) {
         console.log("Item updated successfully");
         console.log(data);
+        toggleEditMode();
         alert('Your changes have been saved!');
       },
       error: function (data) {
