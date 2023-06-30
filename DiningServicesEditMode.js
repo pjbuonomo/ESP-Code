@@ -26,12 +26,15 @@ $(document).ready(function() {
   // Function to initialize and populate the fields
   function initializeFields(itemData) {
     $('span[data-internalName]').each(function () {
-      var internalName = $(this).data('internalname');
+      var internalName = $(this).data('internalName');
       var fieldContent = itemData[internalName];
-      var spanElement = $('<span></span>').text(fieldContent).attr('data-internalName', internalName);
+      var outerSpan = $(this);
+      var innerSpan = $('<span></span>').text(fieldContent).attr('data-internalName', internalName);
       var inputElement = $('<input type="text" class="form-control offcanvas-field">').val(fieldContent).attr('data-internalName', internalName);
   
-      $(this).empty().append(spanElement, inputElement);
+      // Initially show only the inner span element
+      outerSpan.empty().append(innerSpan);
+      outerSpan.append(inputElement.hide());
     });
   
     // Hide the cancel and save buttons initially
@@ -50,19 +53,20 @@ $(document).ready(function() {
     saveButton.toggle();
   
     $('span[data-internalName]').each(function() {
-      var inputElement = $(this).find('input');
-      var spanElement = $(this).find('span');
+      var outerSpan = $(this);
+      var innerSpan = outerSpan.find('span');
+      var inputElement = outerSpan.find('input');
   
       if (inputElement.is(':visible')) {
-        // Restore the original value from the span element
-        inputElement.val(spanElement.text());
+        // Restore the original value from the inner span element
+        inputElement.val(innerSpan.text());
       } else {
-        // Set the value of the input element from the span element
-        inputElement.val(spanElement.text());
+        // Set the value of the input element from the inner span element
+        inputElement.val(innerSpan.text());
       }
   
       inputElement.toggle();
-      spanElement.toggle();
+      innerSpan.toggle();
     });
   }
   
@@ -70,12 +74,20 @@ $(document).ready(function() {
   $('#editButton').on('click', function (event) {
     event.preventDefault();
     toggleEditMode();
+  
+    // Show the cancel and save buttons
+    $('#cancelButton').show();
+    $('#saveButton').show();
   });
   
   // Button click event handler to cancel changes
   $('#cancelButton').on('click', function (event) {
     event.preventDefault();
     toggleEditMode();
+  
+    // Hide the cancel and save buttons
+    $('#cancelButton').hide();
+    $('#saveButton').hide();
   });
   
   // Button click event handler to save changes
@@ -127,3 +139,4 @@ $(document).ready(function() {
       }
     });
   }
+  
