@@ -26,15 +26,13 @@ $(document).ready(function() {
   // Function to initialize and populate the fields
   function initializeFields(itemData) {
     $('span[data-internalName]').each(function () {
-      var internalName = $(this).data('internalName');
+      var internalName = $(this).data('internalname');
       var fieldContent = itemData[internalName];
-      var outerSpan = $(this);
-      var innerSpan = $('<span></span>').text(fieldContent).attr('data-internalName', internalName);
+      var spanElement = $('<span></span>').text(fieldContent).addClass('inner-span').attr('data-internalName', internalName);
       var inputElement = $('<input type="text" class="form-control offcanvas-field">').val(fieldContent).attr('data-internalName', internalName);
   
-      // Initially show only the inner span element
-      outerSpan.empty().append(innerSpan);
-      outerSpan.append(inputElement.hide());
+      // Initially show only the span element
+      $(this).empty().append(spanElement).append(inputElement.hide());
     });
   
     // Hide the cancel and save buttons initially
@@ -53,20 +51,19 @@ $(document).ready(function() {
     saveButton.toggle();
   
     $('span[data-internalName]').each(function() {
-      var outerSpan = $(this);
-      var innerSpan = outerSpan.find('span');
-      var inputElement = outerSpan.find('input');
+      var inputElement = $(this).find('input');
+      var spanElement = $(this).find('.inner-span');
   
       if (inputElement.is(':visible')) {
-        // Restore the original value from the inner span element
-        inputElement.val(innerSpan.text());
+        // Restore the original value from the span element
+        inputElement.val(spanElement.text());
       } else {
-        // Set the value of the input element from the inner span element
-        inputElement.val(innerSpan.text());
+        // Set the value of the input element from the span element
+        inputElement.val(spanElement.text());
       }
   
       inputElement.toggle();
-      innerSpan.toggle();
+      spanElement.toggle();
     });
   }
   
