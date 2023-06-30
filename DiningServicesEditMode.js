@@ -23,21 +23,25 @@ $(document).ready(function() {
     });
   }
   
-  // Function to initialize and populate the fields
-  function initializeFields(itemData) {
+// Function to initialize and populate the fields
+function initializeFields(itemData) {
     $('span[data-internalName]').each(function () {
       var internalName = $(this).data('internalname');
       var fieldContent = itemData[internalName];
-      var spanElement = $('<span></span>').text(fieldContent).addClass('inner-span').attr('data-internalName', internalName);
-      var inputElement = $('<input type="text" class="form-control offcanvas-field">').val(fieldContent).attr('data-internalName', internalName);
+      var fieldType = itemData[internalName + "OWSTEXT"];
   
-      // Initially show only the span element
-      $(this).empty().append(spanElement).append(inputElement.hide());
+      var element;
+      if (fieldType === "Text") {
+        element = $('<input type="text" class="form-control offcanvas-field">').val(fieldContent);
+      } else if (fieldType === "Note") {
+        element = $('<textarea class="form-control offcanvas-field"></textarea>').val(fieldContent);
+      } else {
+        element = $('<span></span>').text(fieldContent);
+      }
+  
+      element.attr('data-internalName', internalName);
+      $(this).empty().append(element);
     });
-  
-    // Hide the cancel and save buttons initially
-    $('#cancelButton').hide();
-    $('#saveButton').hide();
   }
   
   // Function to toggle between input and span tags
