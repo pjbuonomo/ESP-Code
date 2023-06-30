@@ -23,38 +23,28 @@ $(document).ready(function() {
     });
   }
   
-  function initializeFields(itemData) {
+// Function to initialize and populate the fields
+function initializeFields(itemData) {
     $('span[data-internalName]').each(function () {
       var internalName = $(this).data('internalname');
       var fieldContent = itemData[internalName];
-      var fieldType = getFieldInternalType(internalName);
       var inputElement;
-  
-      if (fieldType === "Text") {
-        inputElement = $('<input type="text" class="form-control offcanvas-field">');
-      } else if (fieldType === "Note") {
-        inputElement = $('<textarea class="form-control offcanvas-field"></textarea>');
+    
+      if (internalName.toLowerCase().includes("title")) {
+        inputElement = $('<input type="text" class="form-control offcanvas-field">').val(fieldContent).attr('data-internalName', internalName);
       } else {
-        // Handle other field types as needed
-        inputElement = $('<input type="text" class="form-control offcanvas-field">');
+        inputElement = $('<textarea class="form-control offcanvas-field"></textarea>').val(fieldContent).attr('data-internalName', internalName);
       }
-  
-      inputElement.val(fieldContent).attr('data-internalName', internalName);
-      $(this).empty().append(inputElement);
+    
+      var spanElement = $('<span class="inner-span"></span>').text(fieldContent).attr('data-internalName', internalName);
+    
+      // Initially show only the span element
+      $(this).empty().append(spanElement).append(inputElement.hide());
     });
-  
+    
     // Hide the cancel and save buttons initially
     $('#cancelButton').hide();
     $('#saveButton').hide();
-  }
-  
-  // Function to get the internal type of a field
-  function getFieldInternalType(internalName) {
-    var fieldSchema = ctx.ListSchema.Field.filter(function (field) {
-      return field.InternalName === internalName;
-    })[0];
-  
-    return fieldSchema.Type;
   }
   
   
@@ -216,5 +206,7 @@ $(document).ready(function() {
 
 
 
+
+  
 
   
