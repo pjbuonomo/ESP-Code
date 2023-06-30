@@ -139,4 +139,64 @@ $(document).ready(function() {
       }
     });
   }
+  function updateListItem(itemId, itemData) {
+    var listName = "DiningServicesSite";
+    var url = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('" + listName + "')/items(" + itemId + ")";
+  
+    // Retrieve the list metadata to get the ItemType
+    $.ajax({
+      url: url,
+      type: "GET",
+      headers: {
+        "Accept": "application/json;odata=verbose"
+      },
+      success: function(data) {
+        var itemMetadata = data.d;
+        var itemType = itemMetadata.__metadata.type; // Get the ItemType from the retrieved metadata
+  
+        // Update the __metadata property with the correct type
+        itemData.__metadata = { 'type': itemType };
+  
+        // Perform the update request
+        $.ajax({
+          url: url,
+          type: "POST",
+          contentType: "application/json;odata=verbose",
+          data: JSON.stringify(itemData),
+          headers: {
+            "Accept": "application/json;odata=verbose",
+            "X-RequestDigest": $("#__REQUESTDIGEST").val(),
+            "X-HTTP-Method": "MERGE",
+            "If-Match": "*"
+          },
+          success: function(data) {
+            console.log("Item updated successfully");
+            console.log(data);
+            toggleEditMode();
+            alert('Your changes have been saved!');
+          },
+          error: function(data) {
+            alert("Error updating item: " + JSON.stringify(data));
+            console.log("Error updating item: " + JSON.stringify(data));
+          }
+        });
+      },
+      error: function(data) {
+        alert("Error retrieving list metadata: " + JSON.stringify(data));
+        console.log("Error retrieving list metadata: " + JSON.stringify(data));
+      }
+    });
+  }
+
+  
+
+
+
+
+
+
+
+
+
+
   
