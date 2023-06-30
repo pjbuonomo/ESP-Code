@@ -24,21 +24,17 @@ $(document).ready(function() {
   }
   
 // Function to initialize and populate the fields
-// Function to initialize and populate the fields
 function initializeFields(itemData) {
     $('span[data-internalName]').each(function () {
       var internalName = $(this).data('internalname');
       var fieldContent = itemData[internalName];
-      var element;
+      
+      var inputElement = $('<input type="text" class="form-control offcanvas-field">').val(fieldContent).attr('data-internalName', internalName);
+      var textareaElement = $('<textarea class="form-control offcanvas-field"></textarea>').val(fieldContent).attr('data-internalName', internalName);
     
-      if (internalName.toLowerCase().indexOf("title") !== -1) {
-        element = $('<input type="text" class="form-control offcanvas-field">').val(fieldContent).attr('data-internalName', internalName);
-      } else {
-        element = $('<textarea class="form-control offcanvas-field"></textarea>').val(fieldContent).attr('data-internalName', internalName);
-      }
-    
-      $(this).empty().append(element);
-      element.hide(); // Hide the input or textarea field by default
+      // Initially show only the span element
+      $(this).empty().append($('<span class="inner-span"></span>').text(fieldContent).attr('data-internalName', internalName));
+      $(this).append(inputElement.hide()).append(textareaElement.hide());
     });
     
     // Hide the cancel and save buttons initially
@@ -46,34 +42,30 @@ function initializeFields(itemData) {
     $('#saveButton').hide();
   }
   
-  
-  
-  // Function to toggle between input and span tags
+  // Function to toggle between input/textarea and span tags
   function toggleEditMode() {
     var editButton = $('#editButton');
     var cancelButton = $('#cancelButton');
     var saveButton = $('#saveButton');
-  
+    var spanElements = $('span[data-internalName]');
+    var inputElements = $('input[data-internalName]');
+    var textareaElements = $('textarea[data-internalName]');
+    
     editButton.toggle();
     cancelButton.toggle();
     saveButton.toggle();
-  
-    $('span[data-internalName]').each(function() {
-      var inputElement = $(this).find('input');
-      var spanElement = $(this).find('.inner-span');
-  
-      if (inputElement.is(':visible')) {
-        // Restore the original value from the span element
-        inputElement.val(spanElement.text());
-      } else {
-        // Set the value of the input element from the span element
-        inputElement.val(spanElement.text());
-      }
-  
-      inputElement.toggle();
-      spanElement.toggle();
-    });
+    
+    if (inputElements.is(':visible') || textareaElements.is(':visible')) {
+      spanElements.show();
+      inputElements.hide();
+      textareaElements.hide();
+    } else {
+      spanElements.hide();
+      inputElements.show();
+      textareaElements.show();
+    }
   }
+  
   
   // Button click event handler to toggle edit mode
   $('#editButton').on('click', function (event) {
@@ -208,5 +200,13 @@ function initializeFields(itemData) {
 
 
   
+
+
+
+
+
+
+
+
 
   
