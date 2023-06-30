@@ -23,26 +23,40 @@ $(document).ready(function() {
     });
   }
   
-// Function to initialize and populate the fields
-function initializeFields(itemData) {
+  function initializeFields(itemData) {
     $('span[data-internalName]').each(function () {
       var internalName = $(this).data('internalname');
       var fieldContent = itemData[internalName];
-      var fieldType = itemData[internalName + "OWSTEXT"];
+      var fieldType = getFieldInternalType(internalName);
+      var inputElement;
   
-      var element;
       if (fieldType === "Text") {
-        element = $('<input type="text" class="form-control offcanvas-field">').val(fieldContent);
+        inputElement = $('<input type="text" class="form-control offcanvas-field">');
       } else if (fieldType === "Note") {
-        element = $('<textarea class="form-control offcanvas-field"></textarea>').val(fieldContent);
+        inputElement = $('<textarea class="form-control offcanvas-field"></textarea>');
       } else {
-        element = $('<span></span>').text(fieldContent);
+        // Handle other field types as needed
+        inputElement = $('<input type="text" class="form-control offcanvas-field">');
       }
   
-      element.attr('data-internalName', internalName);
-      $(this).empty().append(element);
+      inputElement.val(fieldContent).attr('data-internalName', internalName);
+      $(this).empty().append(inputElement);
     });
+  
+    // Hide the cancel and save buttons initially
+    $('#cancelButton').hide();
+    $('#saveButton').hide();
   }
+  
+  // Function to get the internal type of a field
+  function getFieldInternalType(internalName) {
+    var fieldSchema = ctx.ListSchema.Field.filter(function (field) {
+      return field.InternalName === internalName;
+    })[0];
+  
+    return fieldSchema.Type;
+  }
+  
   
   // Function to toggle between input and span tags
   function toggleEditMode() {
