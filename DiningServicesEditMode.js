@@ -24,28 +24,27 @@ $(document).ready(function() {
   }
   
 // Function to initialize and populate the fields
+// Function to initialize and populate the fields
 function initializeFields(itemData) {
     $('span[data-internalName]').each(function () {
       var internalName = $(this).data('internalname');
       var fieldContent = itemData[internalName];
-      var inputElement;
+      var element;
     
-      if (internalName.toLowerCase().includes("title")) {
-        inputElement = $('<input type="text" class="form-control offcanvas-field">').val(fieldContent).attr('data-internalName', internalName);
+      if (internalName.toLowerCase().indexOf("title") !== -1) {
+        element = $('<input type="text" class="form-control offcanvas-field">').val(fieldContent).attr('data-internalName', internalName);
       } else {
-        inputElement = $('<textarea class="form-control offcanvas-field"></textarea>').val(fieldContent).attr('data-internalName', internalName);
+        element = $('<textarea class="form-control offcanvas-field"></textarea>').val(fieldContent).attr('data-internalName', internalName);
       }
     
-      var spanElement = $('<span class="inner-span"></span>').text(fieldContent).attr('data-internalName', internalName);
-    
-      // Initially show only the span element
-      $(this).empty().append(spanElement).append(inputElement.hide());
+      $(this).empty().append(element);
     });
     
     // Hide the cancel and save buttons initially
     $('#cancelButton').hide();
     $('#saveButton').hide();
   }
+  
   
   
   // Function to toggle between input and span tags
@@ -208,5 +207,6 @@ function initializeFields(itemData) {
 
 
   
+
 
   
