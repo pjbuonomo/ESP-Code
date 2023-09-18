@@ -55,3 +55,36 @@ function updateTitle(itemId) {
 $(document).ready(function() {
     setTitleForAllItems();
 });
+
+
+function clearTitleForAllItems(listName) {
+    let siteUrl = "https://sp.bbh.com/sites/ESPurchasing";
+    let clientContext = new SP.ClientContext(siteUrl);
+    let oList = clientContext.get_web().get_lists().getByTitle(listName);
+    let camlQuery = new SP.CamlQuery();
+    camlQuery.set_viewXml("<View><Query></Query></View>");
+    let collListItem = oList.getItems(camlQuery);
+    clientContext.load(collListItem);
+    clientContext.executeQueryAsync(onQuerySucceeded, onQueryFailed);
+  
+    function onQuerySucceeded() {
+      let listItemEnumerator = collListItem.getEnumerator();
+      while (listItemEnumerator.moveNext()) {
+        let listItem = listItemEnumerator.get_current();
+        
+        listItem.set_item("Title", "");  // Clearing the "Title" field
+        
+        listItem.update();
+      }
+      clientContext.executeQueryAsync(onUpdateSucceeded, onQueryFailed);
+    }
+  
+    function onUpdateSucceeded() {
+      console.log("Title cleared for all items successfully.");
+    }
+  
+    function onQueryFailed(sender, args) {
+      console.error("Request failed. " + args.get_message());
+    }
+  }
+  
