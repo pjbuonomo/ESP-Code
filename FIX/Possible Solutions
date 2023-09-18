@@ -1,1 +1,34 @@
-Remove the calculations field part
+1. Remove the calculations field part
+2. Explicitly Exclude the Title Field:
+    - var oDataUrl = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('PurchaseRequests')/items?$select=*,AssignedTo/Title&$expand=AssignedTo&$filter=Title ne null";
+3. delete itemData["Title"];
+4. itemData["Title"] = "";
+5. itemData["Title"] = null;
+6. Check the Update Function:
+    - function collectItemData() {
+        var itemData = {};
+        itemData.__metadata = {
+            'type': 'SP.Data.PurchaseRequestsListItem'
+        };
+    
+        // Collect only AssignedToId
+        const assignedToInput = document.querySelector("span.dataQuickLocate[data-internalName='AssignedToId'] input");
+        if (assignedToInput) {
+            itemData['AssignedToId'] = parseInt(assignedToInput.value) || null;
+        }
+    
+        // Collect only Status
+        const statusInput = document.querySelector("span.dataQuickLocate[data-internalName='Status'] input");
+        if (statusInput) {
+            itemData['Status'] = statusInput.value;
+        }
+    
+        return itemData;
+    }
+7. manage-requests-v9.html (readonly fields)
+8. Test with a Smaller Dataset:
+    - var oDataUrl = _spPageContextInfo.webAbsoluteUrl + "/_api/web/lists/getbytitle('PurchaseRequests')/items?$top=100&$select=*,AssignedTo/Title&$expand=AssignedTo";
+9. SharePoint has a List View Threshold (typically 5,000 items for on-premises versions), which limits the number of items that can be retrieved in a single view or query. If you're trying to fetch more than this number, it might cause unexpected behaviors
+10. 
+
+
