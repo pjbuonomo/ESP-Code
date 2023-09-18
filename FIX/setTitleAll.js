@@ -1,5 +1,5 @@
 function setTitleForAllItems() {
-    var listName = "YourListName"; // Replace with your actual list name
+    var listName = "PurchaseRequests"; // Replace with your actual list name
     var siteUrl = _spPageContextInfo.webAbsoluteUrl;
     var endpointUrl = siteUrl + "/_api/web/lists/getbytitle('" + listName + "')/items?$select=ID,Title";
 
@@ -22,12 +22,12 @@ function setTitleForAllItems() {
 }
 
 function updateTitle(itemId) {
-    var listName = "YourListName"; // Replace with your actual list name
+    var listName = "PurchaseRequests"; // Replace with your actual list name
     var siteUrl = _spPageContextInfo.webAbsoluteUrl;
     var endpointUrl = siteUrl + "/_api/web/lists/getbytitle('" + listName + "')/items(" + itemId + ")";
     
     var itemData = {
-        "__metadata": { "type": "SP.Data.YourListNameListItem" }, // Replace 'YourListName' with internal name of the list
+        "__metadata": { "type": "SP.Data.PurchaseRequestsListItem" }, // Replace 'PurchaseRequests' with internal name of the list
         "Title": "Title (do not touch)"
     };
 
